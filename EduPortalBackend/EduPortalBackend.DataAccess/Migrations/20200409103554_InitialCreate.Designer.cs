@@ -4,14 +4,16 @@ using EduPortalBackend.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200409103554_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,45 +40,11 @@ namespace DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("YearOfStudy")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("Entities.Models.Estimate", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("HomeworkId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Mark")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HomeworkId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Estimates");
                 });
 
             modelBuilder.Entity("Entities.Models.File", b =>
@@ -98,45 +66,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Files");
-                });
-
-            modelBuilder.Entity("Entities.Models.Homework", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("CourseId1")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("FileId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId1")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId1");
-
-                    b.HasIndex("FileId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Homeworks");
                 });
 
             modelBuilder.Entity("Entities.Models.Material", b =>
@@ -194,28 +123,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Entities.Models.UserCourse", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("CourseId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCourses");
-                });
-
             modelBuilder.Entity("Entities.Models.Course", b =>
                 {
                     b.HasOne("Entities.Models.User", "Author")
@@ -223,38 +130,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Models.Estimate", b =>
-                {
-                    b.HasOne("Entities.Models.Homework", "Homework")
-                        .WithMany()
-                        .HasForeignKey("HomeworkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Models.Homework", b =>
-                {
-                    b.HasOne("Entities.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId1");
-
-                    b.HasOne("Entities.Models.File", "File")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Entities.Models.Material", b =>
@@ -268,21 +143,6 @@ namespace DataAccess.Migrations
                     b.HasOne("Entities.Models.File", "File")
                         .WithMany("Materials")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Models.UserCourse", b =>
-                {
-                    b.HasOne("Entities.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

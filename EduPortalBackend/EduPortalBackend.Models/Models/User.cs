@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Entities.Models
@@ -18,6 +19,6 @@ namespace Entities.Models
 
 		// Contacts which should be added(many-to-many)
 		//public List<Contact> Contacts { get; set; }
-		public List<Course> Courses { get; set; }
+		public virtual List<Course> Courses { get; set; }
 	}
 }

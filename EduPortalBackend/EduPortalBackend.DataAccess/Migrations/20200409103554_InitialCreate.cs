@@ -8,6 +8,21 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(nullable: true),
+                    FileSize = table.Column<long>(nullable: false),
+                    Data = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -53,10 +68,9 @@ namespace DataAccess.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
-                    DocumentPath = table.Column<string>(nullable: true),
-                    Size = table.Column<long>(nullable: false),
-                    Extension = table.Column<string>(nullable: true),
-                    CourseId = table.Column<long>(nullable: false)
+                    FileId = table.Column<long>(nullable: false),
+                    CourseId = table.Column<long>(nullable: false),
+                    CraetedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,6 +79,12 @@ namespace DataAccess.Migrations
                         name: "FK_Materials_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Materials_Files_FileId",
+                        column: x => x.FileId,
+                        principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -78,6 +98,11 @@ namespace DataAccess.Migrations
                 name: "IX_Materials_CourseId",
                 table: "Materials",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Materials_FileId",
+                table: "Materials",
+                column: "FileId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -87,6 +112,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "Users");

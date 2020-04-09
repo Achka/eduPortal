@@ -10,6 +10,10 @@ namespace EduPortalBackend.DataAccess
 		//public DbSet<Contact> Contacts { get; set; }
 		public DbSet<Course> Courses { get; set; }
 		public DbSet<Material> Materials { get; set; }
+		public DbSet<File> Files { get; set; }
+		public DbSet<Homework> Homeworks { get; set; }
+		public DbSet<Estimate> Estimates { get; set; }
+		public DbSet<UserCourse> UserCourses { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 			// environment dependant connection string must be here instead of hardcoded local db one
