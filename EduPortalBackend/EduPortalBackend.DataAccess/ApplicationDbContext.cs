@@ -21,6 +21,12 @@ namespace EduPortalBackend.DataAccess
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			modelBuilder.Entity<UserCourse>().HasKey(userCourse => new { userCourse.CourseId, userCourse.UserId });
+			modelBuilder.Entity<UserCourse>().HasOne(userCourse => userCourse.User).WithMany(user => user.UserCourses)
+				.HasForeignKey(userCourse => userCourse.UserId);
+			modelBuilder.Entity<UserCourse>().HasOne(userCourse => userCourse.Course).WithMany(course => course.UserCourses)
+				.HasForeignKey(userCourse => userCourse.CourseId);
+
 			// Contacts which should be added(many-to-many)
 			//modelBuilder.Entity<Contact>().HasKey(contact => new { contact.UserB, contact.UserBId });
 			//modelBuilder.Entity<Contact>().HasOne(contact => contact.UserA)

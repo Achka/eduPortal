@@ -19,5 +19,6 @@ namespace Entities.Models
 		public List<Material> Materials { get; set; }
 		public long MaterialSizeLimit { get; set; }
 
+		public virtual List<UserCourse> UserCourses { get; set; }
 	}
 }

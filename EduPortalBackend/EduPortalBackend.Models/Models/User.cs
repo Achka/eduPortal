@@ -19,6 +19,6 @@ namespace Entities.Models
 
 		// Contacts which should be added(many-to-many)
 		//public List<Contact> Contacts { get; set; }
-		public virtual List<Course> Courses { get; set; }
+		public virtual List<UserCourse> UserCourses { get; set; }
 	}
 }
