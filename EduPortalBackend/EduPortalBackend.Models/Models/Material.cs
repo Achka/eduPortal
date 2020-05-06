@@ -15,7 +15,7 @@ namespace Entities.Models
         public long CourseId { get; set; }
         public virtual Course Course { get; set; }
 
-        public DateTime CraetedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
     }
 }
