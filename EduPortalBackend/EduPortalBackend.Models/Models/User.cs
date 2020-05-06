@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Entities.Models
 {
 	// Should be changed when adding ASP.NET Core Identity
-	public class User
+	public class User : IdentityUser<long>
 	{
-		public long Id { get; set; }
-		public string Name { get; set; }
-		public string Surname { get; set; }
 		public string PicturePath { get; set; }
 		// Reference to ASP.NET Core role
 

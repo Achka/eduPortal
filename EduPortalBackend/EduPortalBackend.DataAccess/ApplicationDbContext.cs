@@ -1,11 +1,11 @@
 ﻿using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace EduPortalBackend.DataAccess
 {
-	public class ApplicationDbContext : DbContext {
-		public DbSet<User> Users { get; set; }
+	public class ApplicationDbContext : IdentityDbContext<User, Role, long> {
 		// Contacts which should be added
 		//public DbSet<Contact> Contacts { get; set; }
 		public DbSet<Course> Courses { get; set; }
@@ -21,6 +21,12 @@ namespace EduPortalBackend.DataAccess
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<User>().ToTable("Users");
+			modelBuilder.Entity<Role>().ToTable("Roles");
+			modelBuilder.Entity<IdentityUserRole<long>>().ToTable("UserRoles");
+
 			modelBuilder.Entity<UserCourse>().HasKey(userCourse => new { userCourse.CourseId, userCourse.UserId });
 			modelBuilder.Entity<UserCourse>().HasOne(userCourse => userCourse.User).WithMany(user => user.UserCourses)
 				.HasForeignKey(userCourse => userCourse.UserId);
