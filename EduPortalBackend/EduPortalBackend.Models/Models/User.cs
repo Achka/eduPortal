@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 namespace Entities.Models
 {
-	// Should be changed when adding ASP.NET Core Identity
 	public class User : IdentityUser<long>
 	{
+		public string FirstName { get; set; }
+
+		public string LastName { get; set; }
+
 		public string PicturePath { get; set; }
-		// Reference to ASP.NET Core role
 
 		public DateTime? StudyingStart { get; set; }
 		public DateTime? StudyingFinish { get; set; }
