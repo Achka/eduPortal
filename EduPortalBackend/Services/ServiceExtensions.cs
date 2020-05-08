@@ -37,8 +37,10 @@ namespace Services
 
 		public static void ConfigureDbContext(this IServiceCollection services) => services.AddDbContext<ApplicationDbContext>();
 
-		public static void ConfigureServices(this IServiceCollection services) {
-			services.AddTransient<AuthService>();
-		}
+		public static void ConfigureServices(this IServiceCollection services) => services.AddTransient<AuthService>();
+
+		public static void ConfigureJsonSerialization(this IMvcBuilder builder) => builder.AddJsonOptions(options => {
+			options.JsonSerializerOptions.IgnoreNullValues = true;
+		});
 	}
 }

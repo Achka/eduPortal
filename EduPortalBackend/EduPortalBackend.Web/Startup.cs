@@ -22,7 +22,7 @@ namespace EduPortalBackend.Web
 			services.ConfigureIdentity();
 			services.ConfigureAuthentication(this.Configuration);
 			services.ConfigureServices();
-			services.AddControllers();
+			services.AddControllers().ConfigureJsonSerialization();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
