@@ -9,13 +9,13 @@ namespace Web.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]/[action]")]
-	public class AccountController : Controller
+	public class AuthController : Controller
 	{
 		private readonly SignInManager<User> signInManager;
 		private readonly UserManager<User> userManager;
 		private readonly AuthService authService;
 
-		public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, AuthService authService) => 
+		public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, AuthService authService) => 
 			(this.signInManager, this.userManager, this.authService) = (signInManager, userManager, authService);
 
 		[HttpPost]
