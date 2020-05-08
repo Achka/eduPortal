@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace Services
@@ -18,8 +19,13 @@ namespace Services
 		public static void ConfigureIdentity(this IServiceCollection services) =>
 			services.AddIdentity<User, Role>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-		public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration) =>
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+		public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration) {
+			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+			services.AddAuthentication(options => {
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(options => {
 				options.TokenValidationParameters = new TokenValidationParameters {
 					ValidIssuer = configuration["JwtIssuer"],
 					ValidAudience = configuration["JwtAudience"],
@@ -27,6 +33,7 @@ namespace Services
 					ClockSkew = TimeSpan.Zero
 				};
 			});
+		}
 
 		public static void ConfigureDbContext(this IServiceCollection services) => services.AddDbContext<ApplicationDbContext>();
 
