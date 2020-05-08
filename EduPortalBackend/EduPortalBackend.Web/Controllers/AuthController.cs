@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Entities.DTO;
 using Entities.Models;
+using Entities.TransformationExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Services.StandardResponses;
 
 namespace Web.Controllers
 {
@@ -23,36 +26,25 @@ namespace Web.Controllers
 			var result = await this.signInManager.PasswordSignInAsync(model.Email, model.Password,
 				isPersistent: model.RememberMe, lockoutOnFailure: false);
 			if (!result.Succeeded) {
-				return BadRequest(new { errorText = "Invalid email or password" });
+				return BadRequest(new ApiBadRequestResponse(new[] { "Invalid email or password" }));
 			}
 
 			var user = await this.userManager.FindByEmailAsync(model.Email);
 			var token = this.authService.GenerateJwtToken(user);
-			return Json(new {
-				access_token = token
-			});
+			return Ok(new ApiOkResponse(new { access_token = token }));
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Register(RegisterDto model) {
-			var user = new User {
-				FirstName = model.FirstName,
-				LastName = model.LastName,
-				UserName = model.Email,
-				Email = model.Email,
-				StudyingStart = model.StudyingStart,
-				StudyingFinish = model.StudyingFinish
-			};
+			var user = model.Transform();
 			var result = await this.userManager.CreateAsync(user, model.Password);
 			if (!result.Succeeded) {
-				return BadRequest(result.Errors);
+				return BadRequest(new ApiBadRequestResponse(result.Errors.Select(error => error.Description)));
 			}
 
 			await this.signInManager.SignInAsync(user, false);
 			var token = this.authService.GenerateJwtToken(user);
-			return Json(new {
-				access_token = token
-			});
+			return Ok(new ApiOkResponse(new { access_token = token }));
 		}
 	}
 }

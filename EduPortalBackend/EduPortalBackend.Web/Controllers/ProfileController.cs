@@ -1,7 +1,9 @@
 ﻿using Entities.Models;
+using Entities.TransformationExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services.StandardResponses;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -19,10 +21,10 @@ namespace Web.Controllers
 		public async Task<IActionResult> GetProfile(long id) {
 			var user = await this.userManager.FindByIdAsync(id.ToString());
 			if (user == null) {
-				return NotFound();
+				return NotFound(new ApiResponse(404, $"User with id {user.Id} not found"));
 			}
 
-			return Json(await user.ConvertForProfile(this.userManager));
+			return Ok(new ApiOkResponse(await user.Transform(this.userManager)));
 		}
 	}
 }
