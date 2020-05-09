@@ -18,14 +18,14 @@ namespace DataAccess
 
 		public BaseRepository(ApplicationDbContext context) => (this.context, this.dbSet) = (context, context.Set<T>());
 
-		public void Create(T entity) => this.dbSet.Add(entity);
+		public virtual void Create(T entity) => this.dbSet.Add(entity);
 
-		public void Delete(T entity) => this.dbSet.Remove(entity);
+		public virtual void Delete(T entity) => this.dbSet.Remove(entity);
 
-		public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => this.dbSet.Where(predicate).AsNoTracking();
+		public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => this.dbSet.Where(predicate).AsNoTracking();
 
-		public T GetById(TKey id) => this.dbSet.Find(id);
+		public virtual T GetById(TKey id) => this.dbSet.Find(id);
 
-		public void Update(T entity) => this.dbSet.Update(entity);
+		public virtual void Update(T entity) => this.dbSet.Update(entity);
 	}
 }
