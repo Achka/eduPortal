@@ -23,15 +23,23 @@ namespace Web.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginDto model) {
-			var result = await this.signInManager.PasswordSignInAsync(model.Email, model.Password,
-				isPersistent: model.RememberMe, lockoutOnFailure: false);
+			var user = await this.userManager.FindByEmailAsync(model.Email);
+			if (user == null) {
+				return BadRequest(new ApiBadRequestResponse(new[] { "Invalid email" }));
+			}
+			var result = await this.signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
 			if (!result.Succeeded) {
-				return BadRequest(new ApiBadRequestResponse(new[] { "Invalid email or password" }));
+				return BadRequest(new ApiBadRequestResponse(new[] { "Invalid password" }));
 			}
 
-			var user = await this.userManager.FindByEmailAsync(model.Email);
-			var token = this.authService.GenerateJwtToken(user);
-			return Ok(new ApiOkResponse(new { access_token = token }));
+			var refreshToken = this.authService.GenerateRefreshToken(user);
+			var accessToken = this.authService.GenerateJwtAccessToken(user);
+			return Ok(new ApiOkResponse(new TokenDto { 
+				AccessToken = accessToken,
+				RefreshToken = refreshToken,
+				FirstName = user.FirstName,
+				LastName = user.LastName
+			}));
 		}
 
 		[HttpPost]
@@ -42,9 +50,14 @@ namespace Web.Controllers
 				return BadRequest(new ApiBadRequestResponse(result.Errors.Select(error => error.Description)));
 			}
 
-			await this.signInManager.SignInAsync(user, false);
-			var token = this.authService.GenerateJwtToken(user);
-			return Ok(new ApiOkResponse(new { access_token = token }));
+			var accessToken = this.authService.GenerateJwtAccessToken(user);
+			var refreshToken = this.authService.GenerateRefreshToken(user);
+			return Ok(new ApiOkResponse(new TokenDto {
+				AccessToken = accessToken,
+				RefreshToken = refreshToken,
+				FirstName = user.FirstName,
+				LastName = user.LastName
+			}));
 		}
 	}
 }
