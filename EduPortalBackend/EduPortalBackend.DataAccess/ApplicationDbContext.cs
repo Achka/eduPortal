@@ -14,6 +14,7 @@ namespace EduPortalBackend.DataAccess
 		public DbSet<Homework> Homeworks { get; set; }
 		public DbSet<Estimate> Estimates { get; set; }
 		public DbSet<UserCourse> UserCourses { get; set; }
+		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 			// environment dependant connection string must be here instead of hardcoded local db one

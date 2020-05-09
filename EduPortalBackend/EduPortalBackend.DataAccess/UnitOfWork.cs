@@ -16,6 +16,7 @@ namespace DataAccess
 		private IHomeworkRepository homeworkRepository;
 		private IFileRepository fileRepository;
 		private IMaterialRepository materialRepository;
+		private IRefreshTokenRepository refreshTokenRepository;
 
 		public UnitOfWork(ApplicationDbContext context) => this.context = context;
 
@@ -30,6 +31,9 @@ namespace DataAccess
 
 		public IMaterialRepository Materials => 
 			this.materialRepository ?? (this.materialRepository = new MaterialRepository(this.context));
+
+		public IRefreshTokenRepository RefreshTokens =>
+			this.refreshTokenRepository ?? (this.refreshTokenRepository = new RefreshTokenRepository(this.context));
 
 		public void Save() {
 			this.context.SaveChanges();
