@@ -7,7 +7,7 @@ namespace DataAccess.Repositories
 	/// <summary>
 	/// Defines <see cref="Material"/> specific methods
 	/// </summary>
-	public class MaterialRepository : BaseRepository<Material>, IMaterialRepository
+	public class MaterialRepository : BaseRepository<Material, long>, IMaterialRepository
 	{
 		public MaterialRepository(ApplicationDbContext context) : base(context) {
 		}

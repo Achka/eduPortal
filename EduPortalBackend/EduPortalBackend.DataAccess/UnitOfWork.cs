@@ -1,4 +1,6 @@
 ﻿using Contracts;
+using Contracts.Repositories;
+using DataAccess.Repositories;
 using EduPortalBackend.DataAccess;
 
 namespace DataAccess
@@ -9,30 +11,28 @@ namespace DataAccess
 	public class UnitOfWork : IUnitOfWork
 	{
 		private readonly ApplicationDbContext context;
-		private IUsersRepository usersRepository;
-		private ICoursesRepository coursesRepository;
-		private IHomeworksRepository homeworksRepository;
-		private IFilesRepository filesRepository;
-		private IMaterialsRepository materialsRepository;
+		private IUserRepository userRepository;
+		private ICourseRepository courseRepository;
+		private IHomeworkRepository homeworkRepository;
+		private IFileRepository fileRepository;
+		private IMaterialRepository materialRepository;
 
 		public UnitOfWork(ApplicationDbContext context) => this.context = context;
 
-		public IUsersRepository Users => this.usersRepository ?? (this.usersRepository = new UsersRepository(this.context));
+		public IUserRepository Users => this.userRepository ?? (this.userRepository = new UserRepository(this.context));
 
-		public ICoursesRepository Courses =>  this.coursesRepository ?? (this.coursesRepository = new CoursesRepository(this.context));
+		public ICourseRepository Courses =>  this.courseRepository ?? (this.courseRepository = new CourseRepository(this.context));
 
-		public IHomeworksRepository Homeworks => 
-			this.homeworksRepository ?? (this.homeworksRepository = new HomeworksRepository(this.context));
+		public IHomeworkRepository Homeworks => 
+			this.homeworkRepository ?? (this.homeworkRepository = new HomeworkRepository(this.context));
 
-		public IFilesRepository Files => this.filesRepository ?? (this.filesRepository = new FilesRepository(this.context));
+		public IFileRepository Files => this.fileRepository ?? (this.fileRepository = new FileRepository(this.context));
 
-		public IMaterialsRepository Materials => 
-			this.materialsRepository ?? (this.materialsRepository = new MaterialsRepository(this.context));
+		public IMaterialRepository Materials => 
+			this.materialRepository ?? (this.materialRepository = new MaterialRepository(this.context));
 
 		public void Save() {
 			this.context.SaveChanges();
 		}
 	}
-
-
 }

@@ -7,7 +7,7 @@ namespace DataAccess.Repositories
 	/// <summary>
 	/// Defines <see cref="Course"/> specific methods
 	/// </summary>
-	public class CourseRepository : BaseRepository<Course>, ICourseRepository
+	public class CourseRepository : BaseRepository<Course, long>, ICourseRepository
 	{
 		public CourseRepository(ApplicationDbContext context) : base(context) {
 		}

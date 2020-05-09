@@ -11,7 +11,7 @@ namespace DataAccess
 	/// Implementation of basic interaction with model of specified type <see cref="T"/>
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class BaseRepository<T> : IRepository<T> where T : class
+	public class BaseRepository<T, TKey> : IRepository<T, TKey> where T : class
 	{
 		protected ApplicationDbContext context;
 		protected DbSet<T> dbSet;
@@ -23,6 +23,8 @@ namespace DataAccess
 		public void Delete(T entity) => this.dbSet.Remove(entity);
 
 		public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => this.dbSet.Where(predicate).AsNoTracking();
+
+		public T GetById(TKey id) => this.dbSet.Find(id);
 
 		public void Update(T entity) => this.dbSet.Update(entity);
 	}
