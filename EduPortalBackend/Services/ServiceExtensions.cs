@@ -3,10 +3,12 @@ using DataAccess;
 using EduPortalBackend.DataAccess;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -42,5 +44,14 @@ namespace Services
 		public static void ConfigureJsonSerialization(this IMvcBuilder builder) => builder.AddJsonOptions(options => {
 			options.JsonSerializerOptions.IgnoreNullValues = true;
 		});
+
+		public static void ConfigureSwagger(this IServiceCollection services) => services.AddSwaggerGen(options => {
+			options.SwaggerDoc("v1", new OpenApiInfo { Title = "EduPortal API", Version = "v3" });
+		});
+
+		public static void UseSwaggerWithUI(this IApplicationBuilder app) {
+			app.UseSwagger();
+			app.UseSwaggerUI(options => options.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Edu Portal API v1"));
+		}
 	}
 }

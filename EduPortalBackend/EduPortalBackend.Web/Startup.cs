@@ -22,6 +22,7 @@ namespace EduPortalBackend.Web
 			services.ConfigureIdentity();
 			services.ConfigureAuthentication(this.Configuration);
 			services.ConfigureServices();
+			services.ConfigureSwagger();
 			services.AddControllers().ConfigureJsonSerialization();
 		}
 
@@ -32,6 +33,8 @@ namespace EduPortalBackend.Web
 			}
 
 			app.UseHttpsRedirection();
+
+			app.UseSwaggerWithUI();
 
 			app.UseRouting();
 
