@@ -15,9 +15,9 @@ namespace Entities.Models
 
 		public long AuthorId { get; set; }
 		[ForeignKey("AuthorId")]
-		public User Author { get; set; }
+		public virtual User Author { get; set; }
 
-		public List<Material> Materials { get; set; }
+		public virtual List<Material> Materials { get; set; }
 		public long MaterialSizeLimit { get; set; }
 
 		public virtual List<UserCourse> UserCourses { get; set; }

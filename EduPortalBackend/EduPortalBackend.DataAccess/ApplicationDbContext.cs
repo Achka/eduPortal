@@ -18,7 +18,8 @@ namespace EduPortalBackend.DataAccess
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 			// environment dependant connection string must be here instead of hardcoded local db one
-			optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=EduPortalDb;Trusted_Connection=True;");
+			optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=EduPortalDb;Trusted_Connection=True;")
+				.UseLazyLoadingProxies();
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {

@@ -22,7 +22,7 @@ namespace DataAccess
 
 		public virtual void Delete(T entity) => this.dbSet.Remove(entity);
 
-		public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => this.dbSet.Where(predicate).AsNoTracking();
+		public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => this.dbSet.Where(predicate);
 
 		public virtual T GetById(TKey id) => this.dbSet.Find(id);
 
