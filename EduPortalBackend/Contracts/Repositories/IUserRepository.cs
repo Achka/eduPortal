@@ -1,11 +1,11 @@
 ﻿using Entities.Models;
 
-namespace Contracts
+namespace Contracts.Repositories
 {
 	/// <summary>
 	/// Contract which defines <see cref="User"/> specific methods
 	/// </summary>
-	public interface IUsersRepository : IRepository<User>
+	public interface IUserRepository : IRepository<User>
 	{
 	}
 }

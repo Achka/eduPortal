@@ -1,15 +1,17 @@
-﻿namespace Contracts
+﻿using Contracts.Repositories;
+
+namespace Contracts
 {
 	/// <summary>
 	/// Contract which defines an entry point for interacting with repositories
 	/// </summary>
-	public interface IUnitOfWork
-	{
-		IUsersRepository Users { get; }
-		ICoursesRepository Courses { get; }
-		IHomeworksRepository Homeworks { get; }
-		IFilesRepository Files { get; }
-		IMaterialsRepository Materials { get; }
+	public interface IUnitOfWork {
+		IUserRepository Users { get; }
+		ICourseRepository Courses { get; }
+		IHomeworkRepository Homeworks { get; }
+		IFileRepository Files { get; }
+		IMaterialRepository Materials { get; }
+		IRefreshTokenRepository RefreshTokens { get; }
 
 		// And others if needed
 
