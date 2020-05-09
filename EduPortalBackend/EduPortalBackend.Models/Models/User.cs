@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models
 {
 	public class User : IdentityUser<long>
 	{
+		[Required]
 		public string FirstName { get; set; }
 
+		[Required]
 		public string LastName { get; set; }
 
 		public string PicturePath { get; set; }

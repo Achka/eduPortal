@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models
 {
     public class Material
     {
         public long Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         public long FileId { get; set; }
