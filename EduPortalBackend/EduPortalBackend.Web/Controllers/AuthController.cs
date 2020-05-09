@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Contracts;
 using Entities.DTO;
 using Entities.Models;
 using Entities.TransformationExtensions;
@@ -11,17 +13,22 @@ using Services.StandardResponses;
 namespace Web.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]/[action]")]
+	[Route("api/[controller]")]
 	public class AuthController : Controller
 	{
+		private readonly IUnitOfWork db;
 		private readonly SignInManager<User> signInManager;
 		private readonly UserManager<User> userManager;
 		private readonly AuthService authService;
 
-		public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, AuthService authService) => 
-			(this.signInManager, this.userManager, this.authService) = (signInManager, userManager, authService);
+		public AuthController(IUnitOfWork db, SignInManager<User> signInManager, UserManager<User> userManager, AuthService authService) {
+			this.db = db;
+			this.signInManager = signInManager;
+			this.userManager = userManager;
+			this.authService = authService;
+		}
 
-		[HttpPost]
+		[HttpPost("login")]
 		public async Task<IActionResult> Login(LoginDto model) {
 			var user = await this.userManager.FindByEmailAsync(model.Email);
 			if (user == null) {
@@ -42,7 +49,7 @@ namespace Web.Controllers
 			}));
 		}
 
-		[HttpPost]
+		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterDto model) {
 			var user = model.Transform();
 			var result = await this.userManager.CreateAsync(user, model.Password);
@@ -58,6 +65,26 @@ namespace Web.Controllers
 				FirstName = user.FirstName,
 				LastName = user.LastName
 			}));
+		}
+
+		[HttpPost("token/refresh")]
+		public async Task<IActionResult> RefreshToken([FromBody]string refreshToken) {
+			var refreshTokenFromDb = this.db.RefreshTokens.GetAll(token => token.Token == refreshToken).SingleOrDefault();
+			if (refreshTokenFromDb == null) {
+				return BadRequest(new ApiBadRequestResponse(new[] { "There is no such token in database" }));
+			}
+
+			if (refreshTokenFromDb.Expires < DateTime.UtcNow) {
+				return Unauthorized(new ApiResponse(401, "Refresh token has expired. Please login again"));
+			}
+
+			var user = refreshTokenFromDb.User;
+			if (this.userManager.SupportsUserLockout && await this.userManager.IsLockedOutAsync(user)) {
+				return Unauthorized(new ApiResponse(401, "User is locked out"));
+			}
+
+			var accessToken = this.authService.GenerateJwtAccessToken(user);
+			return Ok(new ApiOkResponse(accessToken));
 		}
 	}
 }
