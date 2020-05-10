@@ -21,7 +21,7 @@ namespace Web.Controllers
 		public async Task<IActionResult> GetProfile(long id) {
 			var user = await this.userManager.FindByIdAsync(id.ToString());
 			if (user == null) {
-				return NotFound(new ApiResponse(404, $"User with id {user.Id} not found"));
+				return NotFound(new ApiResponse(404, $"User with id {id} not found"));
 			}
 
 			return Ok(new ApiOkResponse(await user.Transform(this.userManager)));
