@@ -13,10 +13,10 @@ namespace DataAccess
 	/// <typeparam name="T"></typeparam>
 	public class BaseRepository<T, TKey> : IRepository<T, TKey> where T : class
 	{
-		protected ApplicationDbContext context;
+		protected DbContext context;
 		protected DbSet<T> dbSet;
 
-		public BaseRepository(ApplicationDbContext context) => (this.context, this.dbSet) = (context, context.Set<T>());
+		public BaseRepository(DbContext context) => (this.context, this.dbSet) = (context, context.Set<T>());
 
 		public virtual void Create(T entity) => this.dbSet.Add(entity);
 

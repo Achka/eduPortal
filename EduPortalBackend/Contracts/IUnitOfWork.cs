@@ -1,4 +1,5 @@
 ﻿using Contracts.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Contracts
 {
@@ -6,6 +7,7 @@ namespace Contracts
 	/// Contract which defines an entry point for interacting with repositories
 	/// </summary>
 	public interface IUnitOfWork {
+		DbContext Context { get; }
 		IUserRepository Users { get; }
 		ICourseRepository Courses { get; }
 		IHomeworkRepository Homeworks { get; }

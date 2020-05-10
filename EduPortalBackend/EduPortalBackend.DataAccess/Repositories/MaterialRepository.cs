@@ -1,6 +1,6 @@
 ﻿using Contracts.Repositories;
-using EduPortalBackend.DataAccess;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
@@ -9,7 +9,7 @@ namespace DataAccess.Repositories
 	/// </summary>
 	public class MaterialRepository : BaseRepository<Material, long>, IMaterialRepository
 	{
-		public MaterialRepository(ApplicationDbContext context) : base(context) {
+		public MaterialRepository(DbContext context) : base(context) {
 		}
 	}
 }

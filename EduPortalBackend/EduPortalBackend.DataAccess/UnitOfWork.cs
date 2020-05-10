@@ -2,6 +2,7 @@
 using Contracts.Repositories;
 using DataAccess.Repositories;
 using EduPortalBackend.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -10,7 +11,6 @@ namespace DataAccess
 	/// </summary>
 	public class UnitOfWork : IUnitOfWork
 	{
-		private readonly ApplicationDbContext context;
 		private IUserRepository userRepository;
 		private ICourseRepository courseRepository;
 		private IHomeworkRepository homeworkRepository;
@@ -18,25 +18,27 @@ namespace DataAccess
 		private IMaterialRepository materialRepository;
 		private IRefreshTokenRepository refreshTokenRepository;
 
-		public UnitOfWork(ApplicationDbContext context) => this.context = context;
+		public DbContext Context { get; }
 
-		public IUserRepository Users => this.userRepository ?? (this.userRepository = new UserRepository(this.context));
+		public UnitOfWork(ApplicationDbContext context) => this.Context = context;
 
-		public ICourseRepository Courses =>  this.courseRepository ?? (this.courseRepository = new CourseRepository(this.context));
+		public IUserRepository Users => this.userRepository ?? (this.userRepository = new UserRepository(this.Context));
+
+		public ICourseRepository Courses =>  this.courseRepository ?? (this.courseRepository = new CourseRepository(this.Context));
 
 		public IHomeworkRepository Homeworks => 
-			this.homeworkRepository ?? (this.homeworkRepository = new HomeworkRepository(this.context));
+			this.homeworkRepository ?? (this.homeworkRepository = new HomeworkRepository(this.Context));
 
-		public IFileRepository Files => this.fileRepository ?? (this.fileRepository = new FileRepository(this.context));
+		public IFileRepository Files => this.fileRepository ?? (this.fileRepository = new FileRepository(this.Context));
 
 		public IMaterialRepository Materials => 
-			this.materialRepository ?? (this.materialRepository = new MaterialRepository(this.context));
+			this.materialRepository ?? (this.materialRepository = new MaterialRepository(this.Context));
 
 		public IRefreshTokenRepository RefreshTokens =>
-			this.refreshTokenRepository ?? (this.refreshTokenRepository = new RefreshTokenRepository(this.context));
+			this.refreshTokenRepository ?? (this.refreshTokenRepository = new RefreshTokenRepository(this.Context));
 
 		public void Save() {
-			this.context.SaveChanges();
+			this.Context.SaveChanges();
 		}
 	}
 }

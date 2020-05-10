@@ -1,6 +1,6 @@
 ﻿using Contracts.Repositories;
-using EduPortalBackend.DataAccess;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
@@ -9,7 +9,7 @@ namespace DataAccess.Repositories
 	/// </summary>
 	public class HomeworkRepository : BaseRepository<Homework, long>, IHomeworkRepository
 	{
-		public HomeworkRepository(ApplicationDbContext context) : base(context) {
+		public HomeworkRepository(DbContext context) : base(context) {
 		}
 	}
 }
