@@ -35,6 +35,14 @@ namespace EduPortalBackend.DataAccess
 			modelBuilder.Entity<UserCourse>().HasOne(userCourse => userCourse.Course).WithMany(course => course.UserCourses)
 				.HasForeignKey(userCourse => userCourse.CourseId);
 
+			var adminName = RoleNames.Admin.ToString();
+			var professorName = RoleNames.Professor.ToString();
+			var studentName = RoleNames.Student.ToString();
+			modelBuilder.Entity<Role>().HasData(
+				new Role { Id = 1, Name = adminName.ToLower(), NormalizedName = adminName.ToUpper()},
+				new Role { Id = 2, Name = professorName.ToLower(), NormalizedName = professorName.ToUpper() },
+				new Role { Id = 3, Name = studentName.ToLower(), NormalizedName = studentName.ToUpper() }
+			);
 			// Contacts which should be added(many-to-many)
 			//modelBuilder.Entity<Contact>().HasKey(contact => new { contact.UserB, contact.UserBId });
 			//modelBuilder.Entity<Contact>().HasOne(contact => contact.UserA)

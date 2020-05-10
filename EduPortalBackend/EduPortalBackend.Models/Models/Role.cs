@@ -6,4 +6,9 @@ namespace Entities.Models
 	/// Needed to allow <see cref="User"/> use <see cref="long"/> primary key
 	/// </summary>
 	public class Role : IdentityRole<long> { }
+
+	public enum RoleNames
+	{
+		Admin, Professor, Student
+	}
 }

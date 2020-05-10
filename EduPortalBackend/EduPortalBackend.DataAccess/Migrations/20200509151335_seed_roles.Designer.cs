@@ -4,14 +4,16 @@ using EduPortalBackend.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200509151335_seed_roles")]
+    partial class seed_roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,23 +231,20 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "f1786bfb-ac1a-4dc1-9244-318fa680c17d",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
+                            ConcurrencyStamp = "66f2dae1-f29f-4ef1-9391-c2120d7b833d",
+                            Name = "admin"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "1a95f8c6-9954-4bce-945f-239594318823",
-                            Name = "professor",
-                            NormalizedName = "PROFESSOR"
+                            ConcurrencyStamp = "4ada81e2-2f13-4e44-b431-10d7462a1004",
+                            Name = "professor"
                         },
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "36e1565e-9700-4e9f-8c5a-ac0d859b706b",
-                            Name = "student",
-                            NormalizedName = "STUDENT"
+                            ConcurrencyStamp = "896e9a2e-5260-48b3-b452-724e60b5a56f",
+                            Name = "student"
                         });
                 });
 
