@@ -26,5 +26,8 @@ namespace Entities.DTO
 		[Required]
 		[StringLength(maximumLength: 100, MinimumLength = 6)]
 		public string Password { get; set; }
+
+		[Required]
+		public string Role { get; set; }
 	}
 }

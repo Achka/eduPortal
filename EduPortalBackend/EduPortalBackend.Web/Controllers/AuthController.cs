@@ -19,12 +19,15 @@ namespace Web.Controllers
 		private readonly IUnitOfWork db;
 		private readonly SignInManager<User> signInManager;
 		private readonly UserManager<User> userManager;
+		private readonly RoleManager<Role> roleManager;
 		private readonly AuthService authService;
 
-		public AuthController(IUnitOfWork db, SignInManager<User> signInManager, UserManager<User> userManager, AuthService authService) {
+		public AuthController(IUnitOfWork db, SignInManager<User> signInManager, UserManager<User> userManager, 
+				RoleManager<Role> roleManager, AuthService authService) {
 			this.db = db;
 			this.signInManager = signInManager;
 			this.userManager = userManager;
+			this.roleManager = roleManager;
 			this.authService = authService;
 		}
 
@@ -39,8 +42,8 @@ namespace Web.Controllers
 				return BadRequest(new ApiBadRequestResponse(new[] { "Invalid password" }));
 			}
 
+			var accessToken = await this.authService.GenerateJwtAccessToken(user);
 			var refreshToken = this.authService.GenerateRefreshToken(user);
-			var accessToken = this.authService.GenerateJwtAccessToken(user);
 			return Ok(new ApiOkResponse(new TokenDto { 
 				AccessToken = accessToken,
 				RefreshToken = refreshToken,
@@ -52,12 +55,26 @@ namespace Web.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterDto model) {
 			var user = model.Transform();
-			var result = await this.userManager.CreateAsync(user, model.Password);
-			if (!result.Succeeded) {
-				return BadRequest(new ApiBadRequestResponse(result.Errors.Select(error => error.Description)));
+			using (var transaction = this.db.Context.Database.BeginTransaction()) {
+				var createUserResult = await this.userManager.CreateAsync(user, model.Password);
+				if (!createUserResult.Succeeded) {
+					return BadRequest(new ApiBadRequestResponse(createUserResult.Errors.Select(error => error.Description)));
+				}
+
+				var roleExistResult = await this.roleManager.RoleExistsAsync(model.Role);
+				if (!roleExistResult) {
+					return BadRequest(new ApiBadRequestResponse(new[] { $"Role '{model.Role}' doesn't exist" }));
+				}
+
+				var addRoleToUserResult = await this.userManager.AddToRoleAsync(user, model.Role);
+				if (!addRoleToUserResult.Succeeded) {
+					return BadRequest(new ApiBadRequestResponse(addRoleToUserResult.Errors.Select(error => error.Description)));
+				}
+
+				await transaction.CommitAsync();
 			}
 
-			var accessToken = this.authService.GenerateJwtAccessToken(user);
+			var accessToken = await this.authService.GenerateJwtAccessToken(user);
 			var refreshToken = this.authService.GenerateRefreshToken(user);
 			return Ok(new ApiOkResponse(new TokenDto {
 				AccessToken = accessToken,

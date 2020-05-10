@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -15,14 +17,16 @@ namespace Services
 	{
 		private readonly IUnitOfWork db;
 		private readonly IConfiguration configuration;
+		private readonly UserManager<User> userManager;
 
-		public AuthService(IUnitOfWork db, IConfiguration configuration) => 
-			(this.db, this.configuration) = (db, configuration.GetSection("Auth"));
+		public AuthService(IUnitOfWork db, IConfiguration configuration, UserManager<User> userManager) => 
+			(this.db, this.configuration, this.userManager) = (db, configuration.GetSection("Auth"), userManager);
 
-		public string GenerateJwtAccessToken(User user) {
+		public async Task<string> GenerateJwtAccessToken(User user) {
 			var claims = new List<Claim> {
 				new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(ClaimTypes.Role, (await this.userManager.GetRolesAsync(user)).SingleOrDefault())
 			};
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["JwtKey"]));
 			var token = new JwtSecurityToken(
