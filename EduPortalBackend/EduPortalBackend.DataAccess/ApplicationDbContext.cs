@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace EduPortalBackend.DataAccess
 {
@@ -16,10 +17,12 @@ namespace EduPortalBackend.DataAccess
 		public DbSet<UserCourse> UserCourses { get; set; }
 		public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+		private readonly IConfiguration configuration;
+
+		public ApplicationDbContext(IConfiguration configuration) => this.configuration = configuration;
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-			// environment dependant connection string must be here instead of hardcoded local db one
-			optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=EduPortalDb;Trusted_Connection=True;")
-				.UseLazyLoadingProxies();
+			optionsBuilder.UseSqlServer(this.configuration.GetConnectionString("Azure")).UseLazyLoadingProxies();
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
