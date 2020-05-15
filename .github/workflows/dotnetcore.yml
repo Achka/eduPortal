@@ -1,14 +1,9 @@
 name: .NET Core
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     env:
       working-directory: ./EduPortalBackend
@@ -27,6 +22,14 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
       working-directory: ${{env.working-directory}}
+      
+  publish:
+    needs: [build]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./EduPortalBackend
+    steps:
     - name: Publish to folder
       run: dotnet publish -c Release -o eduportalbackend
       working-directory: ${{env.working-directory}}
