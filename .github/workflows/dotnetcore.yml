@@ -2,11 +2,12 @@ name: .NET Core
 
 on: [push, pull_request]
 
+env:
+  working-directory: ./EduPortalBackend
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      working-directory: ./EduPortalBackend
+    runs-on: ubuntu-latest   
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -24,12 +25,14 @@ jobs:
       working-directory: ${{env.working-directory}}
       
   publish:
-    needs: [build]
     if: github.ref == 'refs/heads/master'
+    needs: [build]
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./EduPortalBackend
     steps:
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
     - name: Publish to folder
       run: dotnet publish -c Release -o eduportalbackend
       working-directory: ${{env.working-directory}}
