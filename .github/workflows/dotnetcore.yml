@@ -29,9 +29,12 @@ jobs:
       working-directory: ${{env.working-directory}}
   publish:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./EduPortalBackend
     steps:
       - name: Publish to folder
         run: dotnet publish -c Release -o eduportalbackend
+        working-directory: ${{env.working-directory}}
       - name: Run Azure webapp deploy action using publish profile credentials
         uses: azure/webapps-deploy@v2
         with:
