@@ -1,16 +1,13 @@
 name: .NET Core
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
+
+env:
+  working-directory: ./EduPortalBackend
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-latest   
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -19,7 +16,30 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore
+      working-directory: ${{env.working-directory}}
     - name: Build
       run: dotnet build --configuration Release --no-restore
+      working-directory: ${{env.working-directory}}
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+      working-directory: ${{env.working-directory}}
+      
+  publish:
+    if: github.ref == 'refs/heads/master'
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Publish to folder
+      run: dotnet publish -c Release -o eduportalbackend
+      working-directory: ${{env.working-directory}}
+    - name: Run Azure webapp deploy action using publish profile credentials
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: eduportal
+        publish-profile: <publishData><publishProfile profileName="eduportal - Web Deploy" publishMethod="MSDeploy" publishUrl="eduportal.scm.azurewebsites.net:443" msdeploySite="eduportal" userName="$eduportal" userPWD="ksuLB9NpluXycNlGtnYdy0HMBELvNpAq72SNo2irvWPmKdtSH8dsQnJavsy0" destinationAppUrl="http://eduportal.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="eduportal - FTP" publishMethod="FTP" publishUrl="ftp://waws-prod-am2-161.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="eduportal\$eduportal" userPWD="ksuLB9NpluXycNlGtnYdy0HMBELvNpAq72SNo2irvWPmKdtSH8dsQnJavsy0" destinationAppUrl="http://eduportal.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="eduportal - ReadOnly - FTP" publishMethod="FTP" publishUrl="ftp://waws-prod-am2-161dr.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="eduportal\$eduportal" userPWD="ksuLB9NpluXycNlGtnYdy0HMBELvNpAq72SNo2irvWPmKdtSH8dsQnJavsy0" destinationAppUrl="http://eduportal.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
+        package: ${{env.working-directory}}/eduportalbackend
