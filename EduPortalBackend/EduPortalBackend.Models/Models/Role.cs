@@ -5,10 +5,10 @@ namespace Entities.Models
 	/// <summary>
 	/// Needed to allow <see cref="User"/> use <see cref="long"/> primary key
 	/// </summary>
-	public class Role : IdentityRole<long> { }
-
-	public enum RoleNames
+	public class Role : IdentityRole<long> 
 	{
-		Admin, Professor, Student
+		public const string ADMIN = "admin";
+		public const string PROFESSOR = "professor";
+		public const string STUDENT = "student";
 	}
 }
