@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Contracts;
 using Entities.DTO;
 using Entities.Models;
 using Entities.TransformationExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Services.CustomAttributes;
 using Services.StandardResponses;
 
 namespace Web.Controllers
@@ -52,6 +55,7 @@ namespace Web.Controllers
 			}));
 		}
 
+		[AuthorizeRoles(Role.ADMIN)]
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterDto model) {
 			var user = model.Transform();
@@ -88,7 +92,7 @@ namespace Web.Controllers
 		public async Task<IActionResult> RefreshToken([FromBody]string refreshToken) {
 			var refreshTokenFromDb = this.db.RefreshTokens.GetAll(token => token.Token == refreshToken).SingleOrDefault();
 			if (refreshTokenFromDb == null) {
-				return BadRequest(new ApiBadRequestResponse(new[] { "There is no such token in database" }));
+				return Unauthorized(new ApiResponse(401, "There is no such token in database"));
 			}
 
 			if (refreshTokenFromDb.Expires < DateTime.UtcNow) {
@@ -102,6 +106,20 @@ namespace Web.Controllers
 
 			var accessToken = this.authService.GenerateJwtAccessToken(user);
 			return Ok(new ApiOkResponse(accessToken));
+		}
+
+		[Authorize]
+		[HttpGet("logout")]
+		public IActionResult Logout() {
+			var refreshToken = this.db.RefreshTokens
+				.GetAll(token => token.UserId == long.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier)))
+				.SingleOrDefault();
+			if (refreshToken == null) {
+				return Unauthorized(new ApiResponse(401, "There is no such token in database"));
+			}
+
+			this.db.RefreshTokens.Delete(refreshToken);
+			return Ok(new ApiOkResponse("Refresh token is deleted"));
 		}
 	}
 }
