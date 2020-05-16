@@ -46,12 +46,34 @@ namespace EduPortalBackend.DataAccess
 				new Role { Id = 2, Name = professorName.ToLower(), NormalizedName = professorName.ToUpper() },
 				new Role { Id = 3, Name = studentName.ToLower(), NormalizedName = studentName.ToUpper() }
 			);
+
+			this.SeedSuperAdmin(modelBuilder);
 			// Contacts which should be added(many-to-many)
 			//modelBuilder.Entity<Contact>().HasKey(contact => new { contact.UserB, contact.UserBId });
 			//modelBuilder.Entity<Contact>().HasOne(contact => contact.UserA)
 			//	.WithMany(user => user.Contacts).HasForeignKey(contact => contact.UserAId);
 			//modelBuilder.Entity<Contact>().HasOne(contact => contact.UserB)
 			//	.WithMany(user => user.Contacts).HasForeignKey(contact => contact.UserBId);
+		}
+
+		private void SeedSuperAdmin(ModelBuilder modelBuilder) {
+			var superAdminUser = new User {
+				Id = 1,
+				FirstName = "Super",
+				LastName = "Admin",
+				Email = "admin@gmail.com",
+				NormalizedEmail = "ADMIN@GMAIL.COM",
+				UserName = "admin@gmail.com",
+				NormalizedUserName = "ADMIN@GMAIL.COM",
+				EmailConfirmed = true,
+				PasswordHash = new PasswordHasher<User>().HashPassword(null, "Aa1111!!"),
+				SecurityStamp = string.Empty
+			};
+			modelBuilder.Entity<User>().HasData(superAdminUser);
+			modelBuilder.Entity<IdentityUserRole<long>>().HasData(new IdentityUserRole<long> {
+				RoleId = 1,
+				UserId = 1
+			});
 		}
 	}
 }
