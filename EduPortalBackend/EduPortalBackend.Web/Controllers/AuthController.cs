@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Contracts;
 using Entities.DTO;
 using Entities.Models;
-using Entities.TransformationExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +20,16 @@ namespace Web.Controllers
 	public class AuthController : Controller
 	{
 		private readonly IUnitOfWork db;
+		private readonly IMapper mapper;
 		private readonly SignInManager<User> signInManager;
 		private readonly UserManager<User> userManager;
 		private readonly RoleManager<Role> roleManager;
 		private readonly AuthService authService;
 
-		public AuthController(IUnitOfWork db, SignInManager<User> signInManager, UserManager<User> userManager, 
+		public AuthController(IUnitOfWork db, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager, 
 				RoleManager<Role> roleManager, AuthService authService) {
 			this.db = db;
+			this.mapper = mapper;
 			this.signInManager = signInManager;
 			this.userManager = userManager;
 			this.roleManager = roleManager;
@@ -50,6 +52,7 @@ namespace Web.Controllers
 			return Ok(new ApiOkResponse(new TokenDto { 
 				AccessToken = accessToken,
 				RefreshToken = refreshToken,
+				UserId = user.Id,
 				FirstName = user.FirstName,
 				LastName = user.LastName
 			}));
@@ -58,7 +61,7 @@ namespace Web.Controllers
 		[AuthorizeRoles(Role.ADMIN)]
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterDto model) {
-			var user = model.Transform();
+			var user = this.mapper.Map<User>(model);
 			using (var transaction = this.db.Context.Database.BeginTransaction()) {
 				var createUserResult = await this.userManager.CreateAsync(user, model.Password);
 				if (!createUserResult.Succeeded) {
