@@ -23,6 +23,7 @@ namespace EduPortalBackend.Web
 			services.ConfigureAuthentication(this.Configuration.GetSection("Auth"));
 			services.ConfigureServices();
 			services.ConfigureSwagger();
+			services.ConfigureAutoMapper();
 			services.AddControllers().ConfigureJsonSerialization();
 		}
 

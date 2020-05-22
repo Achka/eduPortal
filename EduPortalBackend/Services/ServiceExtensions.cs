@@ -1,7 +1,9 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using DataAccess;
 using EduPortalBackend.DataAccess;
 using Entities.Models;
+using Entities.Profiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -52,6 +54,13 @@ namespace Services
 		public static void UseSwaggerWithUI(this IApplicationBuilder app) {
 			app.UseSwagger();
 			app.UseSwaggerUI(options => options.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Edu Portal API v1"));
+		}
+
+		/// <summary>
+		/// Add Automapper service and populate it with profiles from parent assembly of UserProfile class
+		/// </summary>
+		public static void ConfigureAutoMapper(this IServiceCollection services) {
+			services.AddAutoMapper(typeof(UserProfile));
 		}
 	}
 }
