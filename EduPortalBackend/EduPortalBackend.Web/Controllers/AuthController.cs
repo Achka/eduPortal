@@ -107,7 +107,7 @@ namespace Web.Controllers
 				return Unauthorized(new ApiResponse(401, "User is locked out"));
 			}
 
-			var accessToken = this.authService.GenerateJwtAccessToken(user);
+			var accessToken = await this.authService.GenerateJwtAccessToken(user);
 			return Ok(new ApiOkResponse(accessToken));
 		}
 
