@@ -19,6 +19,8 @@ import './style.scss';
 import CoursesPage from 'containers/CoursesPage/Loadable';
 import StudentsPage from 'containers/StudentsPage/Loadable';
 import LecturersPage from 'containers/LecturersPage/Loadable';
+import ProfilePage from 'containers/ProfilePage/Loadable';
+
 
 const App = () => (
   <div className="app-wrapper">
@@ -35,6 +37,7 @@ const App = () => (
       <Route path="/courses" component={CoursesPage} />
       <Route path="/students" component={StudentsPage} />
       <Route path="/lecturers" component={LecturersPage} />
+      <Route path="/profile" component={ProfilePage} />
       <Route path="" component={NotFoundPage} />
     </Switch>
     {/* <Footer /> */}

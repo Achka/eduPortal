@@ -1,4 +1,19 @@
 .header {
+  
+  width: 100%;
+  height: 80px;
+  margin: 0;
+  padding: 20px;
+  background-color: #3f94ff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .fa {
+    margin: 0 10px;
+  }
+
   img {
     width: 100%;
     margin: 0 auto;
