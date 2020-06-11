@@ -16,6 +16,9 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import './style.scss';
+import CoursesPage from 'containers/CoursesPage/Loadable';
+import StudentsPage from 'containers/StudentsPage/Loadable';
+import LecturersPage from 'containers/LecturersPage/Loadable';
 
 const App = () => (
   <div className="app-wrapper">
@@ -27,8 +30,11 @@ const App = () => (
     </Helmet>
     <Header />
     <Switch>
-      <Route exact path="/" component={HomePage} />
-      <Route path="/features" component={FeaturePage} />
+      <Route exact path="/login" component={HomePage} />
+      <Route path="/home" component={FeaturePage} />
+      <Route path="/courses" component={CoursesPage} />
+      <Route path="/students" component={StudentsPage} />
+      <Route path="/lecturers" component={LecturersPage} />
       <Route path="" component={NotFoundPage} />
     </Switch>
     {/* <Footer /> */}

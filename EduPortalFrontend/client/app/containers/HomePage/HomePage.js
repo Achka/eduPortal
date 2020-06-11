@@ -38,7 +38,6 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
           <meta name="description" content="A React.js Boilerplate application homepage" />
         </Helmet> */}
         <div className="home-page">
-          Home Page
           <form className="login">
             <div className="container">
               <label htmlFor="uname"><b>Username</b></label>
@@ -47,7 +46,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
               <label htmlFor="psw"><b>Password</b></label>
               <input type="password" placeholder="Enter Password" name="psw" required />
 
-              <button type="submit">Login</button>
+              <button type="submit" >Login</button>
               <label>
                 <input type="checkbox" checked="checked" name="remember" /> Remember me
               </label>
@@ -55,6 +54,7 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
 
             <div className="container" >
               <span className="psw">Forgot <a href="#">password?</a></span>
+              <span className="psw">Don't have an account? <a href="#">Register</a></span>
             </div>
           </form>
           {/* <section className="centered">

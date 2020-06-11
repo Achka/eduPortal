@@ -8,7 +8,7 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
     return (
       <div className="header">
         <Link className="router-link" to="/home">
-            EduPortal
+        <i className="fa fa-fw fa-home"></i>EduPortal
         </Link>
         {/* <a href="https://twitter.com/flexdinesh">
           <img src={Banner} alt="react-redux-boilerplate - Logo" />
