@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import Banner from './images/banner.jpg';
 import './style.scss';
 
+import { withRouter } from 'react-router-dom';
+
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
   render() {
+    const {history} = this.props;
+
     return (
       <div className="header">
         <div className="main-page">
@@ -13,11 +18,15 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
         <Link className="router-link" to="/home">EduPortal
         </Link>
         </div>
-        <div className="account-info">
-        <i class="fa fa-user" aria-hidden="true"></i>
-        <Link className="router-link" to="/profile">Anna
-        </Link>
-        </div>
+        {
+          history.location.pathname === "/login" ? null 
+          : 
+          <div className="account-info">
+          <i className="fa fa-user" aria-hidden="true"></i>
+          <Link className="router-link" to="/profile">Anna
+          </Link>
+          </div>
+        }
         {/* <a href="https://twitter.com/flexdinesh">
           <img src={Banner} alt="react-redux-boilerplate - Logo" />
         </a>
@@ -35,4 +44,4 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
   }
 }
 
-export default Header;
+export default withRouter(Header);
